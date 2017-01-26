@@ -3,7 +3,7 @@ package com.greenfox.fedex.model;
 /**
  * Created by Viktor on 2017.01.26..
  */
-public class NCrossWordCell {
+public class NTableCell {
 
     public static final int OFF = 0;
     public static final int ON = 1;
@@ -12,11 +12,11 @@ public class NCrossWordCell {
 
     private int state;
 
-    public NCrosswordCell() {
+    public NTableCell() {
         state = EMPTY;
     }
 
-    public NCrosswordCell(int state) {
+    public NTableCell(int state) {
         this.state = state;
     }
 
@@ -48,7 +48,7 @@ public class NCrossWordCell {
     }
 
     public boolean equals(Object obj) {
-        return (obj instanceof NCrossWordCell) && (((NCrossWordCell)obj).getState() == state);
+        return (obj instanceof NTableCell) && (((NTableCell)obj).getState() == state);
     }
 
 }
