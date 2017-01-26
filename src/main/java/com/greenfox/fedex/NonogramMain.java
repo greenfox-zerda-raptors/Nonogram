@@ -1,8 +1,11 @@
 package com.greenfox.fedex;
 
+import com.greenfox.fedex.model.NBlocksTable;
+import com.greenfox.fedex.model.NBlocksTableModel;
 import com.greenfox.fedex.listeners.NTableListener;
 import com.greenfox.fedex.model.NPuzzle;
 import com.greenfox.fedex.model.NTableModel;
+import com.greenfox.fedex.render.NBlocksRenderer;
 import com.greenfox.fedex.render.NTableCellRenderer;
 
 import javax.swing.*;
@@ -17,17 +20,27 @@ import java.io.IOException;
  * Created by Viktor on 2017.01.26..
  */
 public class NonogramMain extends JFrame {
+    private final int defaultNumberOfRows = 10;
+    private final int defaultNumberOfColumns = 10;
+
+
     JMenuBar menubar = new JMenuBar();
     JMenu menu = new JMenu("File");
     JMenuItem menuItem = new JMenuItem("Exit");
 
     JTable puzzleTable = new JTable(new NTableModel(10, 10));
+    private JTable columnsBlocksTable = new NBlocksTable(new NBlocksTableModel((defaultNumberOfRows + 1) >> 1, defaultNumberOfColumns));
+    private JTable rowsBlocksTable = new NBlocksTable(new NBlocksTableModel(defaultNumberOfRows, (defaultNumberOfColumns + 1) >> 1));
     private GridBagConstraints constraints = new GridBagConstraints();
 
     GridBagLayout gridBagLayout = new GridBagLayout();
     NTableCellRenderer nTableCellRenderer;
+    private NBlocksRenderer rowsBlocksRenderer = new NBlocksRenderer(this, true);
+    private NBlocksRenderer columnsBlocksRenderer = new NBlocksRenderer(this, false);
+
     Toolkit tk = Toolkit.getDefaultToolkit();
     JPanel mainPanel = new JPanel(gridBagLayout);
+    private int spaceBetweenTables;
 
     public NonogramMain() {
 
@@ -71,6 +84,15 @@ public class NonogramMain extends JFrame {
         constraints.gridx = 1;
         constraints.gridy = 1;
         constraints.insets = new Insets(0, 0, 0, 0);
+
+        constraints.gridx = 0; constraints.gridy = 1;
+        constraints.insets = new Insets(0, 0, 0, spaceBetweenTables);
+        mainPanel.add(rowsBlocksTable, constraints);
+
+        constraints.gridx = 1; constraints.gridy = 0;
+        constraints.insets = new Insets(0, 0, spaceBetweenTables, 0);
+        mainPanel.add(columnsBlocksTable, constraints);
+
         puzzleTable = new JTable(new NTableModel(10, 10, nPuzzle.getPicture()));
         mainPanel.add(puzzleTable, constraints);
         TableColumnModel columns = puzzleTable.getColumnModel();
