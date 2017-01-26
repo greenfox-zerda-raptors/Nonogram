@@ -51,7 +51,7 @@ public class NPuzzle {
     }
 
     public void load(String filename) throws IOException {
-        int[][] outArray = new int[][]{};
+        int[][] outArray;
         StringBuffer buf = new StringBuffer();
         File filepath = new File(dirPath + "/Puzzles/" + filename);
         FileReader fr = null;
@@ -70,9 +70,10 @@ public class NPuzzle {
             }
         }
         String[] lineArray = output.substring(1, output.length() - 1).split("\r\n");
+        String[] tempLine = (lineArray[0].substring(1, lineArray[0].length() - 1).split(","));
+        outArray = new int[lineArray.length][tempLine.length];
         for (int i = 0; i < lineArray.length; i++) {
-            String[] tempLine = (lineArray[i].substring(1, lineArray[i].length() - 1).split(","));
-            outArray = new int[lineArray.length][tempLine.length];
+            tempLine = (lineArray[i].substring(1, lineArray[i].length() - 1).split(","));
             for (int j = 0; j < tempLine.length; j++) {
                 outArray[i][j] = Integer.parseInt(tempLine[j]);
             }

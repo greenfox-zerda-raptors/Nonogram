@@ -20,6 +20,15 @@ public class NTableModel extends DefaultTableModel {
 
         for (int row = 0; row < numberOfRows; row++)
             for (int column = 0; column < numberOfColumns; column++)
-                setValueAt(new NTableCell(inputArray[row][column] == 1 ? NTableCell.EMPTY : NTableCell.ON), row, column);
+                setValueAt(new NTableCell(inputArray[row][column] == 0 ? NTableCell.EMPTY : NTableCell.ON), row, column);
     }
+
+    public String getColumnName(int column) {
+        return null;
+    }
+
+    public boolean isCellEditable(int row, int column) {
+        return false;
+    }
+
 }
