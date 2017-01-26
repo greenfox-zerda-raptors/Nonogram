@@ -1,6 +1,6 @@
 package com.greenfox.fedex;
 
-import com.greenfox.fedex.IO.Puzzlereader;
+import com.greenfox.fedex.model.NPuzzle;
 import com.greenfox.fedex.model.NTableModel;
 import com.greenfox.fedex.render.NTableCellRenderer;
 
@@ -50,22 +50,23 @@ public class NonogramMain extends JFrame {
                 System.exit(0);
             }
         });
-        try {
-            Puzzlereader.readFile("default.txt");
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
         pack();
     }
 
     public void setupTable() {
-
+        NPuzzle nPuzzle = new NPuzzle(10, 10);
+        try {
+            nPuzzle.load("default.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         constraints.gridx = 1;
         constraints.gridy = 1;
         constraints.insets = new Insets(0, 0, 0, 0);
+        crosswordTable = new JTable(new NTableModel(10, 10, nPuzzle.getPicture()));
         mainPanel.add(crosswordTable, constraints);
         TableColumnModel columns = crosswordTable.getColumnModel();
-        int numberOfColumns = 10; //TODO siwtch for non-static
+        int numberOfColumns = 10; //TODO switch for non-static
 
         for (int i = 0; i < numberOfColumns; i++) {
             setCrosswordColumnProperty(columns.getColumn(i));
@@ -74,7 +75,7 @@ public class NonogramMain extends JFrame {
 
     private void setCrosswordColumnProperty(TableColumn column) {
         column.setCellRenderer(nTableCellRenderer);
-        column.setMinWidth(20);
+        column.setMaxWidth(20);
     }
 
     public static void main(String[] args) {

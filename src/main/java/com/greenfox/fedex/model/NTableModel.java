@@ -15,11 +15,11 @@ public class NTableModel extends DefaultTableModel {
                 setValueAt(new NTableCell(), row, column);
     }
 
-    public NTableModel(int numberOfRows, int numberOfColumns, boolean[][] inputArray) {
+    public NTableModel(int numberOfRows, int numberOfColumns, int[][] inputArray) {
         super(numberOfRows, numberOfColumns);
 
         for (int row = 0; row < numberOfRows; row++)
             for (int column = 0; column < numberOfColumns; column++)
-                setValueAt(new NTableCell(inputArray[row][column] ? NTableCell.EMPTY : NTableCell.ON), row, column);
+                setValueAt(new NTableCell(inputArray[row][column] == 1 ? NTableCell.EMPTY : NTableCell.ON), row, column);
     }
 }
