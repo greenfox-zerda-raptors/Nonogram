@@ -2,6 +2,7 @@ package com.greenfox.fedex;
 
 import com.greenfox.fedex.model.NBlocksTable;
 import com.greenfox.fedex.model.NBlocksTableModel;
+import com.greenfox.fedex.listeners.NTableListener;
 import com.greenfox.fedex.model.NPuzzle;
 import com.greenfox.fedex.model.NTableModel;
 import com.greenfox.fedex.render.NBlocksRenderer;
@@ -66,6 +67,13 @@ public class NonogramMain extends JFrame {
         pack();
     }
 
+    private void addCrosswordTableListener() {
+        NTableListener nTableListener = new NTableListener(this, puzzleTable);
+        puzzleTable.addMouseListener(nTableListener);
+        puzzleTable.addMouseMotionListener(nTableListener);
+    }
+
+
     public void setupTable() {
         NPuzzle nPuzzle = new NPuzzle(10, 10);
         try {
@@ -93,6 +101,8 @@ public class NonogramMain extends JFrame {
         for (int i = 0; i < numberOfColumns; i++) {
             setCrosswordColumnProperty(columns.getColumn(i));
         }
+
+        addCrosswordTableListener();
     }
 
     public int getCurrentMouseRow() {
