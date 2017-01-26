@@ -1,8 +1,11 @@
 package com.greenfox.fedex;
 
 import com.greenfox.fedex.model.NTableModel;
+import com.greenfox.fedex.render.NTableCellRenderer;
 
 import javax.swing.*;
+import javax.swing.table.TableColumn;
+import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -19,7 +22,7 @@ public class NonogramMain extends JFrame {
     private GridBagConstraints constraints = new GridBagConstraints();
 
     GridBagLayout gridBagLayout = new GridBagLayout();
-
+    NTableCellRenderer nTableCellRenderer;
     Toolkit tk = Toolkit.getDefaultToolkit();
     JPanel mainPanel = new JPanel(gridBagLayout);
 
@@ -34,12 +37,13 @@ public class NonogramMain extends JFrame {
         int yPos = (dim.height / 2) - (this.getHeight() / 2);
         this.setLocation(xPos, yPos);
         this.add(mainPanel);
+        nTableCellRenderer = new NTableCellRenderer(this);
         setupTable();
         setJMenuBar(menubar);
         menubar.add(menu);
         menu.add(menuItem);
         menuItem.addActionListener(new ActionListener() {
-            @Override
+
             public void actionPerformed(ActionEvent e) {
                 System.exit(0);
             }
@@ -50,9 +54,21 @@ public class NonogramMain extends JFrame {
 
     public void setupTable() {
 
-        constraints.gridx = 1; constraints.gridy = 1;
+        constraints.gridx = 1;
+        constraints.gridy = 1;
         constraints.insets = new Insets(0, 0, 0, 0);
         mainPanel.add(crosswordTable, constraints);
+        TableColumnModel columns = crosswordTable.getColumnModel();
+        int numberOfColumns = 10; //TODO siwtch for non-static
+
+        for (int i = 0; i < numberOfColumns; i++) {
+            setCrosswordColumnProperty(columns.getColumn(i));
+        }
+    }
+
+    private void setCrosswordColumnProperty(TableColumn column) {
+        column.setCellRenderer(nTableCellRenderer);
+        column.setMinWidth(20);
     }
 
     public static void main(String[] args) {
@@ -62,4 +78,5 @@ public class NonogramMain extends JFrame {
                 new NonogramMain();
             }
         });
-    }}
+    }
+}
