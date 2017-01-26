@@ -20,7 +20,7 @@ public class NonogramMain extends JFrame {
     JMenu menu = new JMenu("File");
     JMenuItem menuItem = new JMenuItem("Exit");
 
-    JTable crosswordTable = new JTable(new NTableModel(10, 10));
+    JTable puzzleTable = new JTable(new NTableModel(10, 10));
     private GridBagConstraints constraints = new GridBagConstraints();
 
     GridBagLayout gridBagLayout = new GridBagLayout();
@@ -63,14 +63,26 @@ public class NonogramMain extends JFrame {
         constraints.gridx = 1;
         constraints.gridy = 1;
         constraints.insets = new Insets(0, 0, 0, 0);
-        crosswordTable = new JTable(new NTableModel(10, 10, nPuzzle.getPicture()));
-        mainPanel.add(crosswordTable, constraints);
-        TableColumnModel columns = crosswordTable.getColumnModel();
+        puzzleTable = new JTable(new NTableModel(10, 10, nPuzzle.getPicture()));
+        mainPanel.add(puzzleTable, constraints);
+        TableColumnModel columns = puzzleTable.getColumnModel();
         int numberOfColumns = 10; //TODO switch for non-static
 
         for (int i = 0; i < numberOfColumns; i++) {
             setCrosswordColumnProperty(columns.getColumn(i));
         }
+    }
+
+    public int getCurrentMouseRow() {
+        Point mousePosition = puzzleTable.getMousePosition();
+
+        return ((mousePosition == null) ? -1 : puzzleTable.rowAtPoint(mousePosition));
+    }
+
+    public int getCurrentMouseColumn() {
+        Point mousePosition = puzzleTable.getMousePosition();
+
+        return ((mousePosition == null) ? -1 : puzzleTable.columnAtPoint(mousePosition));
     }
 
     private void setCrosswordColumnProperty(TableColumn column) {
