@@ -1,5 +1,6 @@
 package com.greenfox.fedex;
 
+import com.greenfox.fedex.IO.Puzzlereader;
 import com.greenfox.fedex.model.NTableModel;
 import com.greenfox.fedex.render.NTableCellRenderer;
 
@@ -9,6 +10,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.IOException;
 
 /**
  * Created by Viktor on 2017.01.26..
@@ -48,7 +50,11 @@ public class NonogramMain extends JFrame {
                 System.exit(0);
             }
         });
-
+        try {
+            Puzzlereader.readFile("default.txt");
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
         pack();
     }
 
