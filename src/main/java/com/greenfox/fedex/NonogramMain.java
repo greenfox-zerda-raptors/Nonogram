@@ -97,7 +97,7 @@ public class NonogramMain extends JFrame {
 
     private void setCrosswordColumnProperty(TableColumn column) {
         column.setCellRenderer(nTableCellRenderer);
-        column.setMaxWidth(20);
+        column.setMaxWidth(16);
     }
 
     public static void main(String[] args) {

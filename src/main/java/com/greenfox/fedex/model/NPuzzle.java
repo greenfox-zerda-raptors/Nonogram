@@ -11,8 +11,8 @@ import java.io.IOException;
 public class NPuzzle {
 
     public static final String dirPath = System.getProperty("user.dir");
-    int numOfRows, numOfColumns;
-    int[][] picture;
+    int numOfRows, numOfColumns, maxNumOfBlocksInRow, maxNumOfBlocksInColumn;
+    int[][] picture, rows, columns;
 
     public NPuzzle(int numOfRows, int numOfColumns, int[][] picture) {
         this.numOfRows = numOfRows;
@@ -23,7 +23,11 @@ public class NPuzzle {
     public NPuzzle(int r, int c) {
         numOfRows = r;
         numOfColumns = c;
+        maxNumOfBlocksInRow = Math.floorDiv((c + 1), 2);
+        maxNumOfBlocksInColumn = Math.floorDiv((r + 1), 2);
 
+        rows = new int[numOfRows][maxNumOfBlocksInRow];
+        columns = new int[maxNumOfBlocksInColumn][numOfColumns];
     }
 
     public int getNumOfRows() {
