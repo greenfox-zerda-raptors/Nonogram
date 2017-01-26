@@ -18,8 +18,8 @@ public class NTableCellRenderer extends DefaultTableCellRenderer {
 
     public NTableCellRenderer(NonogramMain mainFrame) {
         this.mainFrame = mainFrame;
-        shoudntBePaintedIcon = new ImageIcon("Images/" + "shouldnt be painted.gif");
-        questionIcon = new ImageIcon("Images/" + "dont care.gif");
+        shoudntBePaintedIcon = new ImageIcon("src/main/resources/" + "shouldnt be painted.png");
+        questionIcon = new ImageIcon("src/main/resources/" + "question.png");
 
         setOpaque(true);
         setHorizontalAlignment(SwingConstants.CENTER);
@@ -28,14 +28,29 @@ public class NTableCellRenderer extends DefaultTableCellRenderer {
     @Override
     public Component getTableCellRendererComponent(JTable table, Object value, boolean isSelected, boolean hasFocus, int row, int column) {
         if (value instanceof NTableCell) {
-            int cellState = ((NTableCell)value).getState();
+            int cellState = ((NTableCell) value).getState();
 
             switch (cellState) {
-                case NTableCell.ON: setBackground(Color.black); setIcon(null); break;
-                case NTableCell.OFF: setBackground(Color.white); setIcon(shoudntBePaintedIcon); break;
-                case NTableCell.EMPTY: setBackground(Color.white); setIcon(null); break;
-                case NTableCell.DONT_CARE: setBackground(Color.white); setIcon(questionIcon); break;
-                default: setBackground(Color.gray); setIcon(null); break;
+                case NTableCell.ON:
+                    setBackground(Color.black);
+                    setIcon(null);
+                    break;
+                case NTableCell.OFF:
+                    setBackground(Color.white);
+                    setIcon(shoudntBePaintedIcon);
+                    break;
+                case NTableCell.EMPTY:
+                    setBackground(Color.white);
+                    setIcon(null);
+                    break;
+                case NTableCell.DONT_CARE:
+                    setBackground(Color.white);
+                    setIcon(questionIcon);
+                    break;
+                default:
+                    setBackground(Color.gray);
+                    setIcon(null);
+                    break;
             }
         }
         return this;
