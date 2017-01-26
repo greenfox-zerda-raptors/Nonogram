@@ -22,6 +22,4 @@ public class NTableModel extends DefaultTableModel {
             for (int column = 0; column < numberOfColumns; column++)
                 setValueAt(new NTableCell(inputArray[row][column] ? NTableCell.EMPTY : NTableCell.ON), row, column);
     }
-
-
 }
