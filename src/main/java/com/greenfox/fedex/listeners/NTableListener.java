@@ -1,6 +1,7 @@
 package com.greenfox.fedex.listeners;
 
 import com.greenfox.fedex.NonogramMain;
+import com.greenfox.fedex.model.NPuzzle;
 import com.greenfox.fedex.model.NTableCell;
 
 import javax.swing.*;
@@ -15,7 +16,7 @@ public class NTableListener extends MouseInputAdapter {
     private NonogramMain mainFrame;
     private JTable puzzleTable, rowsBlocksTable, columnsBlocksTable;
 
-    public NTableListener(NonogramMain mainFrame, JTable puzzleTable, JTable rowsBlocksTable, JTable columnsBlocksTable) {
+    public NTableListener(NonogramMain mainFrame, JTable puzzleTable, JTable rowsBlocksTable, JTable columnsBlocksTable, NPuzzle current) {
         this.mainFrame = mainFrame;
         this.puzzleTable = puzzleTable;
         this.rowsBlocksTable = rowsBlocksTable;
@@ -28,12 +29,12 @@ public class NTableListener extends MouseInputAdapter {
         int buttonPressed = e.getButton();
 
         if (buttonPressed == MouseEvent.BUTTON1) {
-            ((NTableCell)(puzzleTable.getValueAt(row, column))).switchOnOff();
+            ((NTableCell) (puzzleTable.getValueAt(row, column))).switchOnOff();
             puzzleTable.repaint();
         }
 
         if (buttonPressed == MouseEvent.BUTTON3) {
-            ((NTableCell)(puzzleTable.getValueAt(row, column))).switchEmptyDontcare();
+            ((NTableCell) (puzzleTable.getValueAt(row, column))).switchEmptyDontcare();
             puzzleTable.repaint();
         }
     }

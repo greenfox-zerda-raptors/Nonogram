@@ -54,7 +54,11 @@ public class NPuzzle {
     }
 
     public int[][] getPicture() {
-        return picture;
+        if (picture == null) {
+            return new int[numOfRows][numOfColumns];
+        } else {
+            return picture;
+        }
     }
 
     public int getPictureCell(int r, int c) {
@@ -71,6 +75,18 @@ public class NPuzzle {
 
     public void setPicture(int[][] picture) {
         this.picture = picture;
+    }
+
+    public void setRowsBlocksTableCell(int r, int c, int value) {
+        rows[r][c] = value;
+    }
+
+    public void setColumnsBlocksTableCell(int r, int c, int value) {
+        columns[r][c] = value;
+    }
+
+    public void setPictureCell(int r, int c, int value) {
+        picture[r][c] = value;
     }
 
     public void load(String filename, boolean loadPicture) throws IOException {
@@ -93,7 +109,7 @@ public class NPuzzle {
             }
         }
         String readTime = output.split("<")[1];
-        output = output.split("<")[0];
+        output = output.split("<")[0].substring(2);
         this.timeElapsed = (readTime.equals("null")) ? 0 : Integer.parseInt(readTime);
 
         String[] blocks = output.split("}");
@@ -106,14 +122,14 @@ public class NPuzzle {
             rowsBlocksArray[i] = rowsBlocksArray[i].substring(1, rowsBlocksArray[i].length());
             String[] tempBlockRow = rowsBlocksArray[i].split(",");
             for (int j = 0; j < tempBlockRow.length; j++) {
-                this.rows[i][j] = Integer.parseInt(tempBlockRow[j]);
+                this.rows[i][j] = Integer.parseInt(tempBlockRow[j].trim());
             }
         }
         for (int i = 0; i < columnsBlocksArray.length; i++) {
             columnsBlocksArray[i] = columnsBlocksArray[i].substring(1, columnsBlocksArray[i].length());
             String[] tempBlockColumn = columnsBlocksArray[i].split(",");
             for (int j = 0; j < tempBlockColumn.length; j++) {
-                this.columns[i][j] = Integer.parseInt(tempBlockColumn[j]);
+                this.columns[i][j] = Integer.parseInt(tempBlockColumn[j].trim());
             }
         }
         if (loadPicture) {
@@ -123,7 +139,7 @@ public class NPuzzle {
             for (int i = 0; i < puzzleArray.length; i++) {
                 tempLine = (puzzleArray[i].substring(1, puzzleArray[i].length() - 1).split(","));
                 for (int j = 0; j < tempLine.length; j++) {
-                    outArray[i][j] = Integer.parseInt(tempLine[j]);
+                    outArray[i][j] = Integer.parseInt(tempLine[j].trim());
                 }
             }
             this.picture = outArray;
@@ -139,9 +155,9 @@ public class NPuzzle {
             e.printStackTrace();
         }
         wholeString += "{{";
-        wholeString += arrayToString(rows) + "}{";
-        wholeString += arrayToString(columns) + "}{";
-        wholeString += arrayToString(picture) + "}}<";
+        wholeString += arrayToString(rows, false) + "}\r\n{";
+        wholeString += arrayToString(columns, false) + "}\r\n{";
+        wholeString += arrayToString(picture, true) + "\r\n}}<";
         wholeString += (timeElapsed == 0) ? "null" : timeElapsed;
         try {
             outputStream.writeUTF(wholeString);
@@ -150,10 +166,10 @@ public class NPuzzle {
         }
     }
 
-    public String arrayToString(int[][] inputArray) {
+    public String arrayToString(int[][] inputArray, boolean newLine) {
         String result = "";
         for (int[] i : inputArray) {
-            result += Arrays.toString(i);
+            result += (newLine) ? Arrays.toString(i) + "\r\n" : Arrays.toString(i);
         }
         return result;
     }

@@ -2,10 +2,7 @@ package com.greenfox.fedex;
 
 import com.greenfox.fedex.listeners.NBlocksTableListener;
 import com.greenfox.fedex.listeners.NTableListener;
-import com.greenfox.fedex.model.NBlocksTable;
-import com.greenfox.fedex.model.NBlocksTableModel;
-import com.greenfox.fedex.model.NPuzzle;
-import com.greenfox.fedex.model.NTableModel;
+import com.greenfox.fedex.model.*;
 import com.greenfox.fedex.render.NBlocksRenderer;
 import com.greenfox.fedex.render.NTableCellRenderer;
 import com.greenfox.fedex.tools.NToolkit;
@@ -27,30 +24,30 @@ public class NonogramMain extends JFrame {
     private final int defaultNumberOfColumns = 10;
 
 
-    JMenuBar menubar = new JMenuBar();
-    JMenu menu = new JMenu("File");
-    JMenuItem calculateBlocksMenu = new JMenuItem("Calculate blocks from image");
-    JMenuItem exitMenu = new JMenuItem("Exit");
-    JMenuItem saveMenu = new JMenuItem("Save to file");
-    JMenuItem loadMenu = new JMenuItem("Load from file");
+    private JMenuBar menubar = new JMenuBar();
+    private JMenu menu = new JMenu("File");
+    private JMenuItem calculateBlocksMenu = new JMenuItem("Calculate blocks from image");
+    private JMenuItem exitMenu = new JMenuItem("Exit");
+    private JMenuItem saveMenu = new JMenuItem("Save game");
+    private JMenuItem loadMenu = new JMenuItem("Continue game");
 
     private static final String dirPath = System.getProperty("user.dir");
-    String puzzlePath = dirPath + "/Puzzles/";
-    JFileChooser puzzleFileChooser = new JFileChooser(puzzlePath);
+    private String puzzlePath = dirPath + "/Puzzles/";
+    private JFileChooser puzzleFileChooser = new JFileChooser(puzzlePath);
 
-    JTable puzzleTable = new JTable(new NTableModel(10, 10));
+    private JTable puzzleTable = new JTable(new NTableModel(10, 10));
     private JTable columnsBlocksTable = new NBlocksTable(new NBlocksTableModel((defaultNumberOfRows + 1) >> 1, defaultNumberOfColumns));
     private JTable rowsBlocksTable = new NBlocksTable(new NBlocksTableModel(defaultNumberOfRows, (defaultNumberOfColumns + 1) >> 1));
     private GridBagConstraints constraints = new GridBagConstraints();
 
-    GridBagLayout gridBagLayout = new GridBagLayout();
-    NTableCellRenderer nTableCellRenderer;
-    NPuzzle current;
+    private GridBagLayout gridBagLayout = new GridBagLayout();
+    private NTableCellRenderer nTableCellRenderer;
+    private NPuzzle current;
     private NBlocksRenderer rowsBlocksRenderer = new NBlocksRenderer(this, true);
     private NBlocksRenderer columnsBlocksRenderer = new NBlocksRenderer(this, false);
 
-    Toolkit tk = Toolkit.getDefaultToolkit();
-    JPanel mainPanel = new JPanel(gridBagLayout);
+    private Toolkit tk = Toolkit.getDefaultToolkit();
+    private JPanel mainPanel = new JPanel(gridBagLayout);
     private int spaceBetweenTables = 10;
 
     public NonogramMain() {
@@ -65,7 +62,7 @@ public class NonogramMain extends JFrame {
         this.setLocation(xPos, yPos);
         this.add(mainPanel);
         nTableCellRenderer = new NTableCellRenderer(this);
-        setupTable();
+        setupTable(puzzlePath + "default.txt", true);
         setJMenuBar(menubar);
         menubar.add(menu);
         menu.add(calculateBlocksMenu);
@@ -79,10 +76,10 @@ public class NonogramMain extends JFrame {
         saveMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    int returnValue = puzzleFileChooser.showSaveDialog(menubar);
+                int returnValue = puzzleFileChooser.showSaveDialog(menubar);
 
-                    if (returnValue == JFileChooser.APPROVE_OPTION)
-                        current.save(puzzleFileChooser.getSelectedFile().getAbsolutePath());
+                if (returnValue == JFileChooser.APPROVE_OPTION)
+                    savePuzzle(puzzleFileChooser.getSelectedFile().getAbsolutePath(), current);
 
 
             }
@@ -91,14 +88,14 @@ public class NonogramMain extends JFrame {
         loadMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                    int returnValue = puzzleFileChooser.showOpenDialog(menubar);
+                int returnValue = puzzleFileChooser.showOpenDialog(menubar);
 
-                    if (returnValue == JFileChooser.APPROVE_OPTION) {
-                        File file = puzzleFileChooser.getSelectedFile();
-                        String filename = file.getName();
-                        String absolutePath = file.getAbsolutePath();
-                        load(absolutePath, false);
-                    }
+                if (returnValue == JFileChooser.APPROVE_OPTION) {
+                    File file = puzzleFileChooser.getSelectedFile();
+                    String filename = file.getName();
+                    String absolutePath = file.getAbsolutePath();
+                    loadPanel(absolutePath, true);
+                }
             }
         });
         menu.add(exitMenu);
@@ -111,17 +108,38 @@ public class NonogramMain extends JFrame {
         pack();
     }
 
+    private void savePuzzle(String absolutePath, NPuzzle current) {
+        int numberOfRows = getNumberOfRows();
+        int numberOfColumns = getNumberOfColumns();
+        int maxNumOfBlocksInRow = getMaxNumOfBlocksInRow();
+        int maxNumOfBlocksInColumn = getMaxNumOfBlocksInColumn();
+
+        for (int r = 0; r < numberOfRows; r++)
+            for (int c = 0; c < numberOfColumns; c++)
+                current.setPictureCell(r, c, ((NTableCell) (puzzleTable.getModel().getValueAt(r, c))).getState());
+
+        for (int r = 0; r < numberOfRows; r++)
+            for (int c = 0; c < maxNumOfBlocksInRow; c++)
+                current.setRowsBlocksTableCell(r, c, (Integer) rowsBlocksTable.getModel().getValueAt(r, c));
+
+        for (int r = 0; r < maxNumOfBlocksInColumn; r++)
+            for (int c = 0; c < numberOfColumns; c++)
+                current.setColumnsBlocksTableCell(r, c, (Integer) columnsBlocksTable.getModel().getValueAt(r, c));
+
+        current.save(absolutePath);
+    }
+
     private void addCrosswordTableListener() {
-        NTableListener nTableListener = new NTableListener(this, puzzleTable, rowsBlocksTable, columnsBlocksTable);
+        NTableListener nTableListener = new NTableListener(this, puzzleTable, rowsBlocksTable, columnsBlocksTable, current);
         puzzleTable.addMouseListener(nTableListener);
         puzzleTable.addMouseMotionListener(nTableListener);
     }
 
 
-    public void setupTable() {
+    public void setupTable(String filePath, boolean loadPicture) {
         NPuzzle nPuzzle = new NPuzzle(10, 10);
         try {
-            nPuzzle.load(puzzlePath + "default.txt", true);
+            nPuzzle.load(filePath, loadPicture);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -193,18 +211,16 @@ public class NonogramMain extends JFrame {
         column.setCellRenderer(nTableCellRenderer);
         column.setMaxWidth(16);
     }
-    public void load(String absolutePath, boolean b) {
-        NPuzzle nPuzzle = new NPuzzle(10, 10);
-        try {
-            nPuzzle.load(absolutePath, b);
-        } catch (IOException e) {
-            e.printStackTrace();
-        }
 
-        puzzleTable = new JTable(new NTableModel(10, 10, nPuzzle.getPicture()));
-        rowsBlocksTable = new JTable(new NBlocksTableModel(nPuzzle.getNumOfRows(), nPuzzle.getMaxNumOfBlocksInRow(), nPuzzle, true));
-        columnsBlocksTable = new JTable(new NBlocksTableModel(nPuzzle.getMaxNumOfBlocksInColumn(), nPuzzle.getNumOfColumns(), nPuzzle, false));
+
+    private void loadPanel(String absolutePath, boolean loadPicture) {
+        mainPanel.removeAll();
+        setupTable(absolutePath, loadPicture);
+        mainPanel.revalidate();
+        mainPanel.repaint();
+
     }
+
     private void dontAutoCreateColumnsFromModel() {
         puzzleTable.setAutoCreateColumnsFromModel(false);
         rowsBlocksTable.setAutoCreateColumnsFromModel(false);
@@ -219,5 +235,21 @@ public class NonogramMain extends JFrame {
                 new NonogramMain();
             }
         });
+    }
+
+    public int getNumberOfRows() {
+        return puzzleTable.getRowCount();
+    }
+
+    public int getNumberOfColumns() {
+        return puzzleTable.getColumnCount();
+    }
+
+    public int getMaxNumOfBlocksInRow() {
+        return Math.floorDiv(getNumberOfColumns() + 1, 2);
+    }
+
+    public int getMaxNumOfBlocksInColumn() {
+        return Math.floorDiv(getNumberOfRows() + 1, 2);
     }
 }
