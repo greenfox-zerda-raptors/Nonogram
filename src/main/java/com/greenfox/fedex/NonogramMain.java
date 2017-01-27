@@ -32,6 +32,10 @@ public class NonogramMain extends JFrame {
     JMenuItem exitMenu = new JMenuItem("Exit");
     JMenuItem saveMenu = new JMenuItem("Save to file");
 
+    private static final String dirPath = System.getProperty("user.dir");
+    String puzzlePath = dirPath + "/Puzzles/";
+    JFileChooser puzzleFileChooser = new JFileChooser(puzzlePath);
+
     JTable puzzleTable = new JTable(new NTableModel(10, 10));
     private JTable columnsBlocksTable = new NBlocksTable(new NBlocksTableModel((defaultNumberOfRows + 1) >> 1, defaultNumberOfColumns));
     private JTable rowsBlocksTable = new NBlocksTable(new NBlocksTableModel(defaultNumberOfRows, (defaultNumberOfColumns + 1) >> 1));
@@ -73,7 +77,12 @@ public class NonogramMain extends JFrame {
         saveMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                current.save("XD.txt");
+                    int returnValue = puzzleFileChooser.showSaveDialog(menubar);
+
+                    if (returnValue == JFileChooser.APPROVE_OPTION)
+                        current.save(puzzleFileChooser.getSelectedFile().getAbsolutePath());
+
+
             }
         });
         menu.add(exitMenu);
