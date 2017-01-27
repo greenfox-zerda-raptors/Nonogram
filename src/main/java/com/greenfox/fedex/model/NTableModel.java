@@ -22,13 +22,13 @@ public class NTableModel extends DefaultTableModel {
             for (int column = 0; column < numberOfColumns; column++)
                 switch (inputArray[row][column]) {
                     case 0:
-                        setValueAt(new NTableCell(NTableCell.EMPTY), row, column);
+                        setValueAt(new NTableCell(NTableCell.OFF), row, column);
                         break;
                     case 1:
                         setValueAt(new NTableCell(NTableCell.ON), row, column);
                         break;
                     case 2:
-                        setValueAt(new NTableCell(NTableCell.OFF), row, column);
+                        setValueAt(new NTableCell(NTableCell.EMPTY), row, column);
                         break;
                     case 3:
                         setValueAt(new NTableCell(NTableCell.DONT_CARE), row, column);
