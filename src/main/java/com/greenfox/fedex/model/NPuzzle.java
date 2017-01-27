@@ -1,9 +1,6 @@
 package com.greenfox.fedex.model;
 
-import java.io.BufferedReader;
-import java.io.File;
-import java.io.FileReader;
-import java.io.IOException;
+import java.io.*;
 
 /**
  * Created by Viktor on 2017.01.26..
@@ -11,7 +8,7 @@ import java.io.IOException;
 public class NPuzzle {
 
     public static final String dirPath = System.getProperty("user.dir");
-    int numOfRows, numOfColumns, maxNumOfBlocksInRow, maxNumOfBlocksInColumn;
+    int numOfRows, numOfColumns, maxNumOfBlocksInRow, maxNumOfBlocksInColumn, timeElapsed;
     int[][] picture, rows, columns;
 
     public NPuzzle(int numOfRows, int numOfColumns, int[][] picture) {
@@ -75,7 +72,7 @@ public class NPuzzle {
         this.picture = picture;
     }
 
-    public void load(String filename) throws IOException {
+    public void load(String filename, boolean loadPicture) throws IOException {
         int[][] outArray;
         StringBuffer buf = new StringBuffer();
         File filepath = new File(dirPath + "/Puzzles/" + filename);
@@ -94,6 +91,10 @@ public class NPuzzle {
                 fr.close();
             }
         }
+        String readTime = output.split("<")[1];
+        output = output.split("<")[0];
+        this.timeElapsed = (readTime.equals("null")) ? 0 : Integer.parseInt(readTime);
+
         String[] blocks = output.split("}");
         for (int i = 0; i < blocks.length; i++) {
             blocks[i] = blocks[i].substring((i > 0) ? 3 : 2, blocks[i].length());
@@ -114,16 +115,26 @@ public class NPuzzle {
                 this.columns[i][j] = Integer.parseInt(tempBlockColumn[j]);
             }
         }
-        String[] puzzleArray = blocks[2].split("\r\n");
-        String[] tempLine = puzzleArray[0].substring(1, puzzleArray[0].length() - 1).split(",");
-        outArray = new int[puzzleArray.length][tempLine.length];
-        for (int i = 0; i < puzzleArray.length; i++) {
-            tempLine = (puzzleArray[i].substring(1, puzzleArray[i].length() - 1).split(","));
-            for (int j = 0; j < tempLine.length; j++) {
-                outArray[i][j] = Integer.parseInt(tempLine[j]);
+        if (loadPicture) {
+            String[] puzzleArray = blocks[2].split("\r\n");
+            String[] tempLine = puzzleArray[0].substring(1, puzzleArray[0].length() - 1).split(",");
+            outArray = new int[puzzleArray.length][tempLine.length];
+            for (int i = 0; i < puzzleArray.length; i++) {
+                tempLine = (puzzleArray[i].substring(1, puzzleArray[i].length() - 1).split(","));
+                for (int j = 0; j < tempLine.length; j++) {
+                    outArray[i][j] = Integer.parseInt(tempLine[j]);
+                }
             }
+            this.picture = outArray;
         }
-        this.picture = outArray;
     }
 
+    public void save(String filename) {
+        try {
+            DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(filename));
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+    }
 }

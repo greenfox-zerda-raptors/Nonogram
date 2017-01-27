@@ -95,7 +95,7 @@ public class NonogramMain extends JFrame {
     public void setupTable() {
         NPuzzle nPuzzle = new NPuzzle(10, 10);
         try {
-            nPuzzle.load("default.txt");
+            nPuzzle.load("default.txt", true);
         } catch (IOException e) {
             e.printStackTrace();
         }
