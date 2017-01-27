@@ -11,8 +11,8 @@ import java.io.IOException;
 public class NPuzzle {
 
     public static final String dirPath = System.getProperty("user.dir");
-    int numOfRows, numOfColumns;
-    int[][] picture;
+    int numOfRows, numOfColumns, maxNumOfBlocksInRow, maxNumOfBlocksInColumn;
+    int[][] picture, rows, columns;
 
     public NPuzzle(int numOfRows, int numOfColumns, int[][] picture) {
         this.numOfRows = numOfRows;
@@ -23,7 +23,11 @@ public class NPuzzle {
     public NPuzzle(int r, int c) {
         numOfRows = r;
         numOfColumns = c;
+        maxNumOfBlocksInRow = Math.floorDiv((c + 1), 2);
+        maxNumOfBlocksInColumn = Math.floorDiv((r + 1), 2);
 
+        rows = new int[numOfRows][maxNumOfBlocksInRow];
+        columns = new int[maxNumOfBlocksInColumn][numOfColumns];
     }
 
     public int getNumOfRows() {
@@ -69,11 +73,15 @@ public class NPuzzle {
                 fr.close();
             }
         }
-        String[] lineArray = output.substring(1, output.length() - 1).split("\r\n");
-        String[] tempLine = (lineArray[0].substring(1, lineArray[0].length() - 1).split(","));
-        outArray = new int[lineArray.length][tempLine.length];
-        for (int i = 0; i < lineArray.length; i++) {
-            tempLine = (lineArray[i].substring(1, lineArray[i].length() - 1).split(","));
+        String[] blocks = output.split("}");
+        for (int i = 0; i < blocks.length; i++) {
+            blocks[i] = blocks[i].substring((i > 0) ? 3 : 2, blocks[i].length());
+        }
+        String[] puzzleArray = blocks[2].split("\r\n");
+        String[] tempLine = puzzleArray[0].substring(1, puzzleArray[0].length() - 1).split(",");
+        outArray = new int[puzzleArray.length][tempLine.length];
+        for (int i = 2; i < puzzleArray.length; i++) {
+            tempLine = (puzzleArray[i].substring(1, puzzleArray[i].length() - 1).split(","));
             for (int j = 0; j < tempLine.length; j++) {
                 outArray[i][j] = Integer.parseInt(tempLine[j]);
             }
