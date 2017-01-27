@@ -39,6 +39,7 @@ public class NonogramMain extends JFrame {
 
     GridBagLayout gridBagLayout = new GridBagLayout();
     NTableCellRenderer nTableCellRenderer;
+    NPuzzle current;
     private NBlocksRenderer rowsBlocksRenderer = new NBlocksRenderer(this, true);
     private NBlocksRenderer columnsBlocksRenderer = new NBlocksRenderer(this, false);
 
@@ -72,7 +73,7 @@ public class NonogramMain extends JFrame {
         saveMenu.addActionListener(new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
-
+                current.save("XD.txt");
             }
         });
         menu.add(exitMenu);
@@ -99,6 +100,7 @@ public class NonogramMain extends JFrame {
         } catch (IOException e) {
             e.printStackTrace();
         }
+        current = nPuzzle;
         constraints.gridx = 1;
         constraints.gridy = 1;
         constraints.insets = new Insets(0, 0, 0, 0);
