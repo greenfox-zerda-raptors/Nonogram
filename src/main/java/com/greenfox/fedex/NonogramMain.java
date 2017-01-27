@@ -91,11 +91,13 @@ public class NonogramMain extends JFrame {
         constraints.gridx = 0;
         constraints.gridy = 1;
         constraints.insets = new Insets(0, 0, 0, spaceBetweenTables);
+        rowsBlocksTable = new JTable(new NBlocksTableModel(nPuzzle.getNumOfRows(), nPuzzle.getMaxNumOfBlocksInRow(), nPuzzle, true));
         mainPanel.add(rowsBlocksTable, constraints);
 
         constraints.gridx = 1;
         constraints.gridy = 0;
         constraints.insets = new Insets(0, 0, spaceBetweenTables, 0);
+        columnsBlocksTable = new JTable(new NBlocksTableModel(nPuzzle.getMaxNumOfBlocksInColumn(), nPuzzle.getNumOfColumns(), nPuzzle, false));
         mainPanel.add(columnsBlocksTable, constraints);
 
         constraints.gridx = 0;
