@@ -76,7 +76,7 @@ public class NPuzzle {
     public void load(String filename, boolean loadPicture) throws IOException {
         int[][] outArray;
         StringBuffer buf = new StringBuffer();
-        File filepath = new File(dirPath + "/Puzzles/" + filename);
+        File filepath = new File(filename);
         FileReader fr = null;
         String output;
         try {

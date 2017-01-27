@@ -16,6 +16,7 @@ import javax.swing.table.TableColumnModel;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.io.File;
 import java.io.IOException;
 
 /**
@@ -31,6 +32,7 @@ public class NonogramMain extends JFrame {
     JMenuItem calculateBlocksMenu = new JMenuItem("Calculate blocks from image");
     JMenuItem exitMenu = new JMenuItem("Exit");
     JMenuItem saveMenu = new JMenuItem("Save to file");
+    JMenuItem loadMenu = new JMenuItem("Load from file");
 
     private static final String dirPath = System.getProperty("user.dir");
     String puzzlePath = dirPath + "/Puzzles/";
@@ -85,6 +87,24 @@ public class NonogramMain extends JFrame {
 
             }
         });
+        menu.add(loadMenu);
+        loadMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                    int returnValue = puzzleFileChooser.showOpenDialog(menubar);
+
+                    if (returnValue == JFileChooser.APPROVE_OPTION) {
+                        File file = puzzleFileChooser.getSelectedFile();
+                        String filename = file.getName();
+                        String absolutePath = file.getAbsolutePath();
+                        try {
+                            current.load(absolutePath, false);
+                        } catch (IOException e1) {
+                            e1.printStackTrace();
+                        }
+                    }
+            }
+        });
         menu.add(exitMenu);
         exitMenu.addActionListener(new ActionListener() {
 
@@ -105,7 +125,7 @@ public class NonogramMain extends JFrame {
     public void setupTable() {
         NPuzzle nPuzzle = new NPuzzle(10, 10);
         try {
-            nPuzzle.load("default.txt", true);
+            nPuzzle.load(puzzlePath + "default.txt", true);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -176,6 +196,18 @@ public class NonogramMain extends JFrame {
     private void setCrosswordColumnProperty(TableColumn column) {
         column.setCellRenderer(nTableCellRenderer);
         column.setMaxWidth(16);
+    }
+    public void load() {
+        NPuzzle nPuzzle = new NPuzzle(10, 10);
+        try {
+            nPuzzle.load(puzzlePath + "default.txt", true);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        puzzleTable = new JTable(new NTableModel(10, 10, nPuzzle.getPicture()));
+        rowsBlocksTable = new JTable(new NBlocksTableModel(nPuzzle.getNumOfRows(), nPuzzle.getMaxNumOfBlocksInRow(), nPuzzle, true));
+        columnsBlocksTable = new JTable(new NBlocksTableModel(nPuzzle.getMaxNumOfBlocksInColumn(), nPuzzle.getNumOfColumns(), nPuzzle, false));
     }
 
     public static void main(String[] args) {
