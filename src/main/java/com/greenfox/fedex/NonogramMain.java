@@ -1,8 +1,9 @@
 package com.greenfox.fedex;
 
+import com.greenfox.fedex.listeners.NBlocksTableListener;
+import com.greenfox.fedex.listeners.NTableListener;
 import com.greenfox.fedex.model.NBlocksTable;
 import com.greenfox.fedex.model.NBlocksTableModel;
-import com.greenfox.fedex.listeners.NTableListener;
 import com.greenfox.fedex.model.NPuzzle;
 import com.greenfox.fedex.model.NTableModel;
 import com.greenfox.fedex.render.NBlocksRenderer;
@@ -40,7 +41,7 @@ public class NonogramMain extends JFrame {
 
     Toolkit tk = Toolkit.getDefaultToolkit();
     JPanel mainPanel = new JPanel(gridBagLayout);
-    private int spaceBetweenTables;
+    private int spaceBetweenTables = 10;
 
     public NonogramMain() {
 
@@ -84,25 +85,50 @@ public class NonogramMain extends JFrame {
         constraints.gridx = 1;
         constraints.gridy = 1;
         constraints.insets = new Insets(0, 0, 0, 0);
+        puzzleTable = new JTable(new NTableModel(10, 10, nPuzzle.getPicture()));
+        mainPanel.add(puzzleTable, constraints);
 
-        constraints.gridx = 0; constraints.gridy = 1;
+        constraints.gridx = 0;
+        constraints.gridy = 1;
         constraints.insets = new Insets(0, 0, 0, spaceBetweenTables);
         mainPanel.add(rowsBlocksTable, constraints);
 
-        constraints.gridx = 1; constraints.gridy = 0;
+        constraints.gridx = 1;
+        constraints.gridy = 0;
         constraints.insets = new Insets(0, 0, spaceBetweenTables, 0);
         mainPanel.add(columnsBlocksTable, constraints);
 
-        puzzleTable = new JTable(new NTableModel(10, 10, nPuzzle.getPicture()));
-        mainPanel.add(puzzleTable, constraints);
+        constraints.gridx = 0;
+        constraints.gridy = 0;
+        constraints.insets = new Insets(0, 0, spaceBetweenTables, spaceBetweenTables);
         TableColumnModel columns = puzzleTable.getColumnModel();
         int numberOfColumns = 10; //TODO switch for non-static
 
         for (int i = 0; i < numberOfColumns; i++) {
             setCrosswordColumnProperty(columns.getColumn(i));
         }
-
         addCrosswordTableListener();
+        initBlocksTable(rowsBlocksTable, true);
+        initBlocksTable(columnsBlocksTable, false);
+
+
+    }
+
+    private void initBlocksTable(JTable blocksTable, boolean rows) {
+        TableColumnModel columns = blocksTable.getColumnModel();
+        int numberOfColumns = blocksTable.getColumnCount();
+
+        for (int i = 0; i < numberOfColumns; i++) {
+            setBlocksColumnsProperty(columns.getColumn(i), rows);
+        }
+        blocksTable.setRowSelectionAllowed(false);
+        blocksTable.addMouseListener(new NBlocksTableListener(this, blocksTable));
+        blocksTable.putClientProperty("terminateEditOnFocusLost", Boolean.TRUE);
+    }
+
+    private void setBlocksColumnsProperty(TableColumn column, boolean rows) {
+        column.setCellRenderer(rows ? rowsBlocksRenderer : columnsBlocksRenderer);
+        column.setMaxWidth(16);
     }
 
     public int getCurrentMouseRow() {
