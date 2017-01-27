@@ -13,11 +13,13 @@ import java.awt.event.MouseEvent;
 public class NTableListener extends MouseInputAdapter {
 
     private NonogramMain mainFrame;
-    private JTable puzzleTable;
+    private JTable puzzleTable, rowsBlocksTable, columnsBlocksTable;
 
-    public NTableListener(NonogramMain mainFrame, JTable puzzleTable) {
+    public NTableListener(NonogramMain mainFrame, JTable puzzleTable, JTable rowsBlocksTable, JTable columnsBlocksTable) {
         this.mainFrame = mainFrame;
         this.puzzleTable = puzzleTable;
+        this.rowsBlocksTable = rowsBlocksTable;
+        this.columnsBlocksTable = columnsBlocksTable;
     }
 
     public void mousePressed(MouseEvent e) {
@@ -34,5 +36,15 @@ public class NTableListener extends MouseInputAdapter {
             ((NTableCell)(puzzleTable.getValueAt(row, column))).switchEmptyDontcare();
             puzzleTable.repaint();
         }
+    }
+
+    public void mouseMoved(MouseEvent e) {
+        rowsBlocksTable.repaint();
+        columnsBlocksTable.repaint();
+    }
+
+    public void mouseExited(MouseEvent e) {
+        rowsBlocksTable.repaint();
+        columnsBlocksTable.repaint();
     }
 }

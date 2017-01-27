@@ -78,7 +78,7 @@ public class NonogramMain extends JFrame {
     }
 
     private void addCrosswordTableListener() {
-        NTableListener nTableListener = new NTableListener(this, puzzleTable);
+        NTableListener nTableListener = new NTableListener(this, puzzleTable, rowsBlocksTable, columnsBlocksTable);
         puzzleTable.addMouseListener(nTableListener);
         puzzleTable.addMouseMotionListener(nTableListener);
     }
