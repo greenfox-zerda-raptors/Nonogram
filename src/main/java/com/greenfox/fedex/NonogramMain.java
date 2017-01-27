@@ -8,6 +8,7 @@ import com.greenfox.fedex.model.NPuzzle;
 import com.greenfox.fedex.model.NTableModel;
 import com.greenfox.fedex.render.NBlocksRenderer;
 import com.greenfox.fedex.render.NTableCellRenderer;
+import com.greenfox.fedex.tools.NToolkit;
 
 import javax.swing.*;
 import javax.swing.table.TableColumn;
