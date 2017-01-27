@@ -97,11 +97,7 @@ public class NonogramMain extends JFrame {
                         File file = puzzleFileChooser.getSelectedFile();
                         String filename = file.getName();
                         String absolutePath = file.getAbsolutePath();
-                        try {
-                            current.load(absolutePath, false);
-                        } catch (IOException e1) {
-                            e1.printStackTrace();
-                        }
+                        load(absolutePath, false);
                     }
             }
         });
@@ -197,10 +193,10 @@ public class NonogramMain extends JFrame {
         column.setCellRenderer(nTableCellRenderer);
         column.setMaxWidth(16);
     }
-    public void load() {
+    public void load(String absolutePath, boolean b) {
         NPuzzle nPuzzle = new NPuzzle(10, 10);
         try {
-            nPuzzle.load(puzzlePath + "default.txt", true);
+            nPuzzle.load(absolutePath, b);
         } catch (IOException e) {
             e.printStackTrace();
         }
@@ -209,6 +205,12 @@ public class NonogramMain extends JFrame {
         rowsBlocksTable = new JTable(new NBlocksTableModel(nPuzzle.getNumOfRows(), nPuzzle.getMaxNumOfBlocksInRow(), nPuzzle, true));
         columnsBlocksTable = new JTable(new NBlocksTableModel(nPuzzle.getMaxNumOfBlocksInColumn(), nPuzzle.getNumOfColumns(), nPuzzle, false));
     }
+    private void dontAutoCreateColumnsFromModel() {
+        puzzleTable.setAutoCreateColumnsFromModel(false);
+        rowsBlocksTable.setAutoCreateColumnsFromModel(false);
+        columnsBlocksTable.setAutoCreateColumnsFromModel(false);
+    }
+
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
