@@ -1,6 +1,7 @@
 package com.greenfox.fedex.model;
 
 import java.io.*;
+import java.util.Arrays;
 
 /**
  * Created by Viktor on 2017.01.26..
@@ -130,11 +131,31 @@ public class NPuzzle {
     }
 
     public void save(String filename) {
+        String wholeString = "";
+        DataOutputStream outputStream = null;
         try {
-            DataOutputStream outputStream = new DataOutputStream(new FileOutputStream(filename));
+            outputStream = new DataOutputStream(new FileOutputStream(filename));
         } catch (FileNotFoundException e) {
             e.printStackTrace();
         }
-
+        wholeString += "{{";
+        wholeString += arrayToString(rows) + "}{";
+        wholeString += arrayToString(columns) + "}{";
+        wholeString += arrayToString(picture) + "}}<";
+        wholeString += (timeElapsed == 0) ? "null" : timeElapsed;
+        try {
+            outputStream.writeUTF(wholeString);
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
     }
+
+    public String arrayToString(int[][] inputArray) {
+        String result = "";
+        for (int[] i : inputArray) {
+            result += Arrays.toString(i);
+        }
+        return result;
+    }
+
 }
