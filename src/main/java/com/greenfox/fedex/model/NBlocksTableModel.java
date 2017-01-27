@@ -22,11 +22,21 @@ public class NBlocksTableModel extends DefaultTableModel {
 		/* Initialize blocks cells. */
         for (int row = 0; row < numberOfRows; row++)
             for (int column = 0; column < numberOfColumns; column++) {
-                if (rows)
-                    setValueAt(0, row, column);
-                else
-                    setValueAt(0, row, column);
+                if (rows) {
+                    setValueAt(puzzle.getRowsBlocksTableCell(row, column), row, column);
+                } else {
+                    setValueAt(puzzle.getColumnsBlocksTableCell(row, column), row, column);
+                }
             }
     }
+
+    public String getColumnName(int column) {
+        return null;
+    }
+
+    public boolean isCellEditable(int row, int column) {
+        return false;
+    }
+
 
 }

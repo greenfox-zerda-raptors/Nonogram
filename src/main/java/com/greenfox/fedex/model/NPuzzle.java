@@ -20,9 +20,18 @@ public class NPuzzle {
         this.picture = picture;
     }
 
+    public int getMaxNumOfBlocksInRow() {
+        return maxNumOfBlocksInRow;
+    }
+
+    public int getMaxNumOfBlocksInColumn() {
+        return maxNumOfBlocksInColumn;
+    }
+
     public NPuzzle(int r, int c) {
         numOfRows = r;
         numOfColumns = c;
+
         maxNumOfBlocksInRow = Math.floorDiv((c + 1), 2);
         maxNumOfBlocksInColumn = Math.floorDiv((r + 1), 2);
 
@@ -48,6 +57,18 @@ public class NPuzzle {
 
     public int[][] getPicture() {
         return picture;
+    }
+
+    public int getPictureCell(int r, int c) {
+        return picture[r][c];
+    }
+
+    public int getRowsBlocksTableCell(int r, int c) {
+        return rows[r][c];
+    }
+
+    public int getColumnsBlocksTableCell(int r, int c) {
+        return columns[r][c];
     }
 
     public void setPicture(int[][] picture) {
@@ -77,10 +98,26 @@ public class NPuzzle {
         for (int i = 0; i < blocks.length; i++) {
             blocks[i] = blocks[i].substring((i > 0) ? 3 : 2, blocks[i].length());
         }
+        String[] rowsBlocksArray = blocks[0].split("]");
+        String[] columnsBlocksArray = blocks[1].split("]");
+        for (int i = 0; i < rowsBlocksArray.length; i++) {
+            rowsBlocksArray[i] = rowsBlocksArray[i].substring(1, rowsBlocksArray[i].length());
+            String[] tempBlockRow = rowsBlocksArray[i].split(",");
+            for (int j = 0; j < tempBlockRow.length; j++) {
+                this.rows[i][j] = Integer.parseInt(tempBlockRow[j]);
+            }
+        }
+        for (int i = 0; i < columnsBlocksArray.length; i++) {
+            columnsBlocksArray[i] = columnsBlocksArray[i].substring(1, columnsBlocksArray[i].length());
+            String[] tempBlockColumn = columnsBlocksArray[i].split(",");
+            for (int j = 0; j < tempBlockColumn.length; j++) {
+                this.columns[i][j] = Integer.parseInt(tempBlockColumn[j]);
+            }
+        }
         String[] puzzleArray = blocks[2].split("\r\n");
         String[] tempLine = puzzleArray[0].substring(1, puzzleArray[0].length() - 1).split(",");
         outArray = new int[puzzleArray.length][tempLine.length];
-        for (int i = 2; i < puzzleArray.length; i++) {
+        for (int i = 0; i < puzzleArray.length; i++) {
             tempLine = (puzzleArray[i].substring(1, puzzleArray[i].length() - 1).split(","));
             for (int j = 0; j < tempLine.length; j++) {
                 outArray[i][j] = Integer.parseInt(tempLine[j]);
