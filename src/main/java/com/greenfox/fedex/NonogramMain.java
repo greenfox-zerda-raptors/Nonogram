@@ -30,6 +30,7 @@ public class NonogramMain extends JFrame {
     JMenu menu = new JMenu("File");
     JMenuItem calculateBlocksMenu = new JMenuItem("Calculate blocks from image");
     JMenuItem exitMenu = new JMenuItem("Exit");
+    JMenuItem saveMenu = new JMenuItem("Save to file");
 
     JTable puzzleTable = new JTable(new NTableModel(10, 10));
     private JTable columnsBlocksTable = new NBlocksTable(new NBlocksTableModel((defaultNumberOfRows + 1) >> 1, defaultNumberOfColumns));
@@ -65,6 +66,13 @@ public class NonogramMain extends JFrame {
             @Override
             public void actionPerformed(ActionEvent e) {
                 NToolkit.calculateBlocks(puzzleTable, rowsBlocksTable, columnsBlocksTable);
+            }
+        });
+        menu.add(saveMenu);
+        saveMenu.addActionListener(new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+
             }
         });
         menu.add(exitMenu);
